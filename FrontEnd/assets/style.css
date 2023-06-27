@@ -2,7 +2,6 @@
    v2.0 | 20110126
    License: none (public domain)
 */
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -85,6 +84,32 @@ h2{
 	font-size: 30px;
 	color: #1D6154
 }
+#edit-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+#edit-bar div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  }
+  #edit-bar span {
+    margin-right: 10px;
+}
+  
+  #publish-button {
+    border: none; 
+    border-radius: 15px; 
+    color: black; 
+    font-size: 16px;
+	
+}
+
+
 nav ul {
 	display: flex;
 	align-items: center;
@@ -228,7 +253,7 @@ footer nav ul {
 
 
 
-/*** login layout ***/
+/*** login ***/
 #login {
 	display: flex;
 	flex-direction: column;
