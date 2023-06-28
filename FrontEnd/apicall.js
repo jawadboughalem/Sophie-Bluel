@@ -38,6 +38,7 @@ function displayWorks(category) {
   if (category && category !== 'TOUS') {
     filteredWorks = allWorks.filter(work => work.category.name === category);
   }
+
   // J'itère sur les travaux filtrés et je crée des éléments figure pour chaque travail
   filteredWorks.forEach(work => {
     const figure = createFigure(work);
@@ -64,7 +65,6 @@ function loadCategories() {
       displayCategories();
     });
 }
-
 // Fonction pour afficher les catégories
 function displayCategories() {
   const categoryContainer = document.querySelector('.category-container');
@@ -77,3 +77,30 @@ function displayCategories() {
 
 loadCategories();
 loadWorks();
+
+//POUR LE LOGOUT
+const loginLink = document.querySelector('.login-link');
+
+if (localStorage.getItem('authToken')) {
+  loginLink.textContent = 'logout';
+  loginLink.href = '#';
+
+  loginLink.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    localStorage.removeItem('authToken');
+    window.location.reload();
+  });
+} else {
+  loginLink.textContent = 'login';
+  loginLink.href = 'login.html';
+}
+
+//Barre noir mode édition
+const editBar = document.querySelector('#edit-bar');
+
+if (localStorage.getItem('authToken')) {
+  editBar.style.display = 'block';
+} else {
+  editBar.style.display = 'none';
+}

@@ -1,12 +1,12 @@
-// Fonction pour récupérer les valeurs des champs de formulaire
-function getFormValues() {
+ // Fonction pour récupérer les valeurs des champs de formulaire
+ function getFormValues() {
     const email = document.querySelector('#email').value;
     const password = document.querySelector('#pass').value;
     return { email, password };
   }
   
-  // Fonction pour envoyer les informations de connexion à l'API
-  function sendLoginInfo(loginData) {
+ // Fonction pour envoyer les informations de connexion à l'API
+ function sendLoginInfo(loginData) {
     return fetch('http://localhost:5678/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
