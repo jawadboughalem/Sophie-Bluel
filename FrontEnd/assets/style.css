@@ -53,6 +53,7 @@ body {
 	font-family: 'Work Sans' ;
 	font-size: 14px;
 }
+  
 header {
 	display: flex;
 	justify-content: space-between;
@@ -66,6 +67,7 @@ h1{
 	display: flex;
 	flex-direction: column;
 	font-family: 'Syne';
+	padding-top: 20px;
 	font-size: 22px;
 	font-weight: 800;
 	color: #B1663C
@@ -75,7 +77,7 @@ h1 > span {
 	font-family: 'Work Sans';
 	font-size:10px;
 	letter-spacing: 0.1em;
-;
+
 }
 
 h2{
@@ -98,22 +100,24 @@ h2{
 	align-items: center;
   }
   #edit-bar span {
+	font-family: 'Work Sans';
     margin-right: 10px;
 }
   
   #publish-button {
+	font-family: 'Work Sans';
     border: none; 
     border-radius: 15px; 
     color: black; 
-    font-size: 16px;
-	
+    font-size: 13px;
+	cursor: pointer;
 }
-
 
 nav ul {
 	display: flex;
 	align-items: center;
 	list-style-type: none;
+	padding-top: 15px;
 
 }
 nav li {
@@ -127,6 +131,7 @@ li:hover {
 #introduction {
 	display: flex;
 	align-items: center;
+	position: relative;
 }
 #introduction figure {
 	flex: 1
@@ -140,6 +145,7 @@ li:hover {
 #introduction article {
 	flex: 1
 }
+
 #introduction h2 {
 	margin-bottom: 1em;
 }
@@ -218,11 +224,11 @@ footer nav ul {
 }
 
 
-/**Ajout de code**/
+/**BOUTONS CATEGORIES**/
 
 .category-button,
 .all-category-button {
-  font-family: 'Raleway', sans-serif;
+  font-family: 'Syne', sans-serif;
 }
 
 .category-container {
@@ -252,8 +258,8 @@ footer nav ul {
   
 
 
+/*** PAGE LOGIN ***/
 
-/*** login ***/
 #login {
 	display: flex;
 	flex-direction: column;
@@ -289,4 +295,56 @@ footer nav ul {
 	color: #000000;
 }
 
-  
+
+
+/* MODAL */
+.editorBtn1 {
+	position: absolute;
+	bottom: 0;
+	margin-bottom: -22px;
+	margin-left: 56px; 
+}
+.editorBtn2 {
+    display: flex;
+    justify-content: center;
+	margin-left: 310px;
+}
+
+#btnModifier2 {
+    display: flex;
+    align-items: center;
+	margin-top: -85px;
+}
+.modifyBtn {
+    border: none;
+    background: none;
+	cursor: pointer;
+}
+
+#delete-btn {
+	color: red;
+	text-decoration: none;
+	border: none;
+	background-color: var(--main-background);
+}
+
+.modal{
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.09);
+}
+
+.modal-wrapper{
+	width: 400px;
+	height: 500px;
+	max-width: calc(100vw -20px);
+	max-height: calc(100vh - 20px);
+	padding: 20px;
+	background-color: #FFF;
+}

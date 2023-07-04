@@ -7,17 +7,17 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="assets/style.css">
+	<script src="https://kit.fontawesome.com/c60e67d077.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <header>
-	<nav id="edit-bar" style="display: none;">
+	<nav id="edit-bar">
 		<div style="background-color: black; color: white; padding: 10px;">
-			<i class="fa fa-pen-square" style="color: #ffffff;"></i>
+			<i class="fa-regular fa-pen-to-square"></i>
 			<span>Mode édition</span>
-			<button id="publish-button">Publier les changements</button>
+			<button id="publish-button">publier les changements</button>
 		</div>
 	</nav>
 
@@ -37,15 +37,28 @@
 		<figure>
 			<img src="assets/images/sophie-bluel.png" alt="">
 		</figure>
+		<div class="editorBtn1">
+			<aside id="btnModifier1">
+				<i class="fa-regular fa-pen-to-square"></i>
+				<button data-target="#modal" class="modifyBtn js-modal">modifier</button>
+			  </aside>							
+		</div>
 		<article>
 			<h2>Designer d'espace</h2>
 			<p>Je raconte votre histoire, je valorise vos idées. Je vous accompagne de la conception à la livraison finale du chantier.</p>
 			<p>Chaque projet sera étudié en commun, de façon à mettre en valeur les volumes, les matières et les couleurs dans le respect de l’esprit des lieux et le choix adapté des matériaux. Le suivi du chantier sera assuré dans le souci du détail, le respect du planning et du budget.</p>
 			<p>En cas de besoin, une équipe pluridisciplinaire peut-être constituée : architecte DPLG, décorateur(trice)</p>
 		</article>
-	</section>
+	</section>		
+
 	<section id="portfolio">
 		<h2>Mes Projets</h2>
+		<div class="editorBtn2">
+			<aside id="btnModifier2">
+				<i class="fa-regular fa-pen-to-square"></i>
+				<button data-target="#modal" class="modifyBtn js-modal">modifier</button>
+			</aside>									
+		</div>
         <!-- Element HTML pour contenir les boutons des catégories -->
         <div class="category-container"></div>
 		<div class="gallery">
@@ -74,7 +87,25 @@
 		</ul>
 	</nav>
 </footer>
-    <!-- Le script est chargé ici après que le HTML ait été complètement chargé -->
-	<script src="apicall.js"></script>
+
+<a href="modifyBtn js-modal" class="js-modal">Ouvrir la modale</a>
+
+<aside id="modal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="titlemodal" style="display: none;">
+	<div class="modal-wrapper">
+		<button class="js-modal-close">
+			<i class="fa-solid fa-xmark"></i>
+     	</button>
+		<h2 id="titlemodal">Galerie Photo</h2>
+		<div id="gallery-modal"></div>
+		<div class="modal-btns">
+		  <input type="button" value="Ajouter une photo" class="main-btn" id="modal-add-btn"/>
+		  <input type="submit" value="supprimer la galerie" id="delete-btn" />
+		</div>
+
+			
+	</div>
+</aside>
+
+<script src="apicall.js"></script>
 </body>
 </html>

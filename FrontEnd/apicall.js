@@ -50,7 +50,12 @@ function displayWorks(category) {
 function createCategoryButton(category) {
   const button = document.createElement('button');
   button.innerHTML = category;
-  button.classList.add('category-button');
+    if (category === 'TOUS') {
+    button.classList.add('all-category-button');
+    button.classList.add('all-category-text');
+  } else {
+    button.classList.add('category-button');
+  }
   button.addEventListener('click', function () {
     displayWorks(category);
   });
@@ -96,11 +101,76 @@ if (localStorage.getItem('authToken')) {
   loginLink.href = 'login.html';
 }
 
-//Barre noir mode édition
 const editBar = document.querySelector('#edit-bar');
+const editButton1 = document.querySelector('.editorBtn1 #btnModifier1');
+const editButton2 = document.querySelector('.editorBtn2 #btnModifier2');
 
 if (localStorage.getItem('authToken')) {
   editBar.style.display = 'block';
+  editButton1.style.display = 'flex';
+  editButton2.style.display = 'flex';
 } else {
   editBar.style.display = 'none';
+  editButton1.style.display = 'none';
+  editButton2.style.display = 'none';
 }
+
+// POUR LA MODAL
+
+let modal = null
+
+const openModal = function (e) {
+  e.preventDefault()
+  const target = document.querySelector(e.target.dataset.target)
+  target.style.display = null
+  target.removeAttribute('aria-hidden')
+  target.setAttribute('aria-modal', 'true')
+  modal = target
+  modal.addEventListener('click', closeModal)
+  modal.querySelector('.js-modal-close').addEventListener('click', closeModal)
+  modal.querySelector('.modal-wrapper').addEventListener('click', stopPropagation)
+}
+
+const closeModal = function(e) {
+  if (modal === null) return
+  e.preventDefault()
+  modal.style.display = "none"
+  modal.setAttribute('aria-hidden', 'true')
+  modal.removeAttribute('aria-modal')
+  modal.removeEventListener('click', closeModal)
+  modal.querySelector('.js-modal-close').removeEventListener('click', closeModal)
+  modal.querySelector('.modal-wrapper').removeEventListener('click', stopPropagation)
+  modal = null
+}
+
+const stopPropagation = function (e) {
+  e.stopPropagation()
+}
+
+document.querySelectorAll('.js-modal').forEach(a => { 
+  a.addEventListener('click', openModal)
+})
+
+
+
+/*On récupère la modale et les boutons
+const modal = document.getElementById("modal"); // Remplacez "modal" par l'ID de votre modale
+const btn = document.querySelector(".js-modal"); // Bouton qui déclenche la modale
+const span = document.getElementsByClassName("close")[0]; // Bouton de fermeture dans la modale
+
+// Quand l'utilisateur clique sur le bouton, on ouvre la modale
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// Quand l'utilisateur clique sur le bouton de fermeture (x), on ferme la modale
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// Quand l'utilisateur clique n'importe où en dehors de la modale, celle-ci se ferme
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}*/
