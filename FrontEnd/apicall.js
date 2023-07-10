@@ -1,5 +1,7 @@
 let allWorks = [];
 let categories = [];
+let worksData = [];
+
 
 // Fonction pour récupérer les données depuis une URL donnée
 function fetchData(url) {
@@ -25,6 +27,7 @@ function loadWorks() {
   fetchData('http://localhost:5678/api/works')
     .then(works => {
       allWorks = works;
+      worksData = works;
       displayWorks();
     });
 }
@@ -121,7 +124,8 @@ let modal = null
 
 const openModal = function (e) {
   e.preventDefault()
-  const target = document.querySelector(e.target.dataset.target)
+  if (modal !== null) return
+  const target = document.querySelector('#modal')
   target.style.display = null
   target.removeAttribute('aria-hidden')
   target.setAttribute('aria-modal', 'true')
@@ -129,6 +133,21 @@ const openModal = function (e) {
   modal.addEventListener('click', closeModal)
   modal.querySelector('.js-modal-close').addEventListener('click', closeModal)
   modal.querySelector('.modal-wrapper').addEventListener('click', stopPropagation)
+  
+  // Utilisation des données stockées dans worksData
+  let galleryModal = document.getElementById('gallery-modal');
+  galleryModal.innerHTML = ""; 
+  worksData.map(work => {
+    let workElement = document.createElement('div');
+    workElement.classList.add('work-element');
+    workElement.innerHTML = `
+      <div class="work-img">
+        <img src="${work.imageUrl}" alt="${work.title}"/>
+        <button class="edit-button">Éditer</button>
+        <i class="fa fa-trash trash-icon"></i> <!-- Ajout de l'icône de la poubelle ici -->
+      </div>`;
+    galleryModal.appendChild(workElement);
+  });
 }
 
 const closeModal = function(e) {
@@ -147,30 +166,25 @@ const stopPropagation = function (e) {
   e.stopPropagation()
 }
 
+document.querySelectorAll('.modal-close-btn').forEach(btn => {
+  btn.addEventListener('click', closeModal);
+});
+
 document.querySelectorAll('.js-modal').forEach(a => { 
   a.addEventListener('click', openModal)
 })
 
-
-
-/*On récupère la modale et les boutons
-const modal = document.getElementById("modal"); // Remplacez "modal" par l'ID de votre modale
-const btn = document.querySelector(".js-modal"); // Bouton qui déclenche la modale
-const span = document.getElementsByClassName("close")[0]; // Bouton de fermeture dans la modale
-
-// Quand l'utilisateur clique sur le bouton, on ouvre la modale
-btn.onclick = function() {
-  modal.style.display = "block";
-}
-
-// Quand l'utilisateur clique sur le bouton de fermeture (x), on ferme la modale
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-// Quand l'utilisateur clique n'importe où en dehors de la modale, celle-ci se ferme
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
+window.addEventListener('keydown', function (e) {
+  if (e.key === "Escape" || e.key === "Esc") {
+    closeModal(e)
   }
-}*/
+})
+
+document.getElementById('modal-add-btn').addEventListener('click', function() {
+  document.getElementById('modal-add').style.display = "block";
+});
+
+document.getElementById('modal-close-btn').addEventListener('click', function() {
+  document.getElementById('modal-add').style.display = "none";
+});
+

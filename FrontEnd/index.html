@@ -88,7 +88,7 @@
 	</nav>
 </footer>
 
-<a href="modifyBtn js-modal" class="js-modal">Ouvrir la modale</a>
+<a href="#" class="modifyBtn js-modal">Ouvrir la modale</a>
 
 <aside id="modal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="titlemodal" style="display: none;">
 	<div class="modal-wrapper">
@@ -97,12 +97,49 @@
      	</button>
 		<h2 id="titlemodal">Galerie Photo</h2>
 		<div id="gallery-modal"></div>
+		<div class="grey-bar"></div>
 		<div class="modal-btns">
 		  <input type="button" value="Ajouter une photo" class="main-btn" id="modal-add-btn"/>
 		  <input type="submit" value="supprimer la galerie" id="delete-btn" />
 		</div>
 
-			
+		<div class="modal-add" id="modal-add">
+			<div class="modal-nav">
+			  <button class="return-btn"  id="modal-close-btn">
+				<i class="fa-solid fa-arrow-left fa-lg"></i>
+			  </button>
+			  <button class="modal-close-btn">
+				<i class="fa-solid fa-xmark fa-lg"></i>
+			  </button>
+			</div>
+			<h2>Ajout photo</h2>
+			<form id="add-work-form">		  
+				<div class="uploaded-img-box" id="uploaded-img-box">
+				    <div id="upload-img-preview">
+						<img class="upload-img" src="assets/images/Group.svg" alt="Ajouter une photo">
+						<label>+ Ajouter photo
+						<input id="add-work-btn"
+						type="file"
+						class="add-btn"
+						accept=".jpg, .jpeg, .png" 
+						name="image"/>
+						</label>
+					  <p>jpg, png : 4mo max</p>
+				    </div>
+				</div>
+				<div class="work-add" id="work-add">
+					<label for="title">Titre</label>
+					<input type="text" name="title" id="upload-title" />
+					<label for="categorySelection">Catégorie</label>
+					<select name="category" id="select-category">
+					  <option value=""></option>
+					</select>
+				</div>
+				<div id="modal-submit-btn">
+					<button type="submit" class="validation-btn" id="validation-btn">Valider</button>
+				</div>
+			</form>
+		</div>
 	</div>
 </aside>
 

@@ -15,23 +15,12 @@ function sendLoginInfo(loginData) {
   .then(response => response.json());
 }
 
-// Fonction pour vérifier si le token est bien sauvegardé dans le localStorage
-function verifyToken() {
-  const token = localStorage.getItem('authToken');
-  if (token) {
-      console.log('Le token a été correctement sauvegardé dans le localStorage.');
-  } else {
-      console.log('Aucun token trouvé dans le localStorage.');
-  }
-}
-
 // Fonction pour gérer la réponse de l'API
 function handleApiResponse(data, errorMsg) {
-  if (data.error) {
+  if (data.message) {
       errorMsg.textContent = "Oups, votre identifiant ou votre mot de passe semble incorrecte !";
   } else {
       localStorage.setItem('authToken', data.token); // Je sauvegarde le token d'authentification dans le local storage
-      verifyToken(); // Je vérifie le token après l'avoir sauvegardé
       window.location.href = 'index.html'; // Redirige vers la page d’accueil
   }
 }
@@ -45,7 +34,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const loginData = getFormValues();
       sendLoginInfo(loginData)
-      .then(data => handleApiResponse(data, errorMsg))
+      .then((data) => {handleApiResponse(data, errorMsg)}
+      )
+    
       .catch(err => {
           errorMsg.textContent = "Erreur lors de la connexion. Veuillez réessayer plus tard.";
           console.error('Erreur:', err);
