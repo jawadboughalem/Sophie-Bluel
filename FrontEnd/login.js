@@ -34,8 +34,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const loginData = getFormValues();
       sendLoginInfo(loginData)
-      .then((data) => {handleApiResponse(data, errorMsg)}
-      )
+      .then((data) => {
+        handleApiResponse(data, errorMsg)
+      })
     
       .catch(err => {
           errorMsg.textContent = "Erreur lors de la connexion. Veuillez réessayer plus tard.";
