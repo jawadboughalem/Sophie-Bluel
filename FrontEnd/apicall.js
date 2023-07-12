@@ -1,7 +1,5 @@
 let allWorks = [];
 let categories = [];
-let worksData = [];
-
 
 // Fonction pour récupérer les données depuis une URL donnée
 function fetchData(url) {
@@ -27,7 +25,6 @@ function loadWorks() {
   fetchData('http://localhost:5678/api/works')
     .then(works => {
       allWorks = works;
-      worksData = works;
       displayWorks();
     });
 }
@@ -37,11 +34,9 @@ function displayWorks(category) {
   gallery.innerHTML = ''; // Vider la galerie
   let filteredWorks = allWorks;
 
-  // Si une catégorie est fournie et n'est pas 'TOUS', je filtre les travaux par catégorie
   if (category && category !== 'TOUS') {
     filteredWorks = allWorks.filter(work => work.category.name === category);
   }
-
   // J'itère sur les travaux filtrés et je crée des éléments figure pour chaque travail
   filteredWorks.forEach(work => {
     const figure = createFigure(work);
@@ -76,7 +71,7 @@ function loadCategories() {
 // Fonction pour afficher les catégories
 function displayCategories() {
   const categoryContainer = document.querySelector('.category-container');
-  categoryContainer.innerHTML = ''; // Vider le conteneur des catégories
+  categoryContainer.innerHTML = '';
   categories.forEach(category => {
     const button = createCategoryButton(category);
     categoryContainer.appendChild(button);
@@ -120,50 +115,81 @@ if (localStorage.getItem('authToken')) {
 
 // POUR LA MODAL
 
+// Suppression travail
+function deleteWork(workId) {
+  console.log('Token:', localStorage.getItem('authToken'));
+
+  return fetch(`http://localhost:5678/api/works/${workId}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        console.error(`Erreur HTTP: ${response.status}`);
+      } else {
+        console.log('Travail supprimé avec succès');
+      }
+    })
+    .catch(error => {
+      console.error('Erreur :', error);
+    });
+}
+
 let modal = null
 
 const openModal = function (e) {
-  e.preventDefault()
-  if (modal !== null) return
-  const target = document.querySelector('#modal')
-  target.style.display = null
-  target.removeAttribute('aria-hidden')
-  target.setAttribute('aria-modal', 'true')
-  modal = target
-  modal.addEventListener('click', closeModal)
-  modal.querySelector('.js-modal-close').addEventListener('click', closeModal)
-  modal.querySelector('.modal-wrapper').addEventListener('click', stopPropagation)
+  e.preventDefault();
+  if (modal !== null) return;
+  const target = document.querySelector('#modal');
+  target.style.display = null;
+  target.removeAttribute('aria-hidden');
+  target.setAttribute('aria-modal', 'true');
+  modal = target;
   
-  // Utilisation des données stockées dans worksData
+  modal.addEventListener('click', closeModal);
+  modal.querySelector('.js-modal-close').addEventListener('click', closeModal);
+  modal.querySelector('.modal-wrapper').addEventListener('click', stopPropagation);
+
+  //Utilisation des données stockées dans worksData
   let galleryModal = document.getElementById('gallery-modal');
   galleryModal.innerHTML = ""; 
-  worksData.map(work => {
+  allWorks.map((work, index) => {
     let workElement = document.createElement('div');
     workElement.classList.add('work-element');
     workElement.innerHTML = `
       <div class="work-img">
         <img src="${work.imageUrl}" alt="${work.title}"/>
-        <button class="edit-button">Éditer</button>
-        <i class="fa fa-trash trash-icon"></i> <!-- Ajout de l'icône de la poubelle ici -->
+        <button class="edit-button">éditer</button>
+        <i class="fa fa-trash trash-icon" onclick="deleteWork(${work.id}).then(loadWorks)"></i>
       </div>`;
     galleryModal.appendChild(workElement);
-  });
+
+    //Event listener pour l'îcone supprimer
+    workElement.querySelector('.fa-trash').addEventListener('click', function() {
+        deleteWork(work.id)
+            .then(() => {
+                galleryModal.removeChild(workElement);
+            });
+    });
+});
 }
 
 const closeModal = function(e) {
-  if (modal === null) return
-  e.preventDefault()
-  modal.style.display = "none"
-  modal.setAttribute('aria-hidden', 'true')
-  modal.removeAttribute('aria-modal')
-  modal.removeEventListener('click', closeModal)
-  modal.querySelector('.js-modal-close').removeEventListener('click', closeModal)
-  modal.querySelector('.modal-wrapper').removeEventListener('click', stopPropagation)
-  modal = null
+  if (modal === null) return;
+  e.preventDefault();
+  modal.style.display = "none";
+  modal.setAttribute('aria-hidden', 'true');
+  modal.removeAttribute('aria-modal');
+  modal.removeEventListener('click', closeModal);
+  modal.querySelector('.js-modal-close').removeEventListener('click', closeModal);
+  modal.querySelector('.modal-wrapper').removeEventListener('click', stopPropagation);
+  modal = null;
 }
 
 const stopPropagation = function (e) {
-  e.stopPropagation()
+  e.stopPropagation();
 }
 
 document.querySelectorAll('.modal-close-btn').forEach(btn => {
@@ -176,7 +202,7 @@ document.querySelectorAll('.js-modal').forEach(a => {
 
 window.addEventListener('keydown', function (e) {
   if (e.key === "Escape" || e.key === "Esc") {
-    closeModal(e)
+    closeModal(e);
   }
 })
 
@@ -187,4 +213,3 @@ document.getElementById('modal-add-btn').addEventListener('click', function() {
 document.getElementById('modal-close-btn').addEventListener('click', function() {
   document.getElementById('modal-add').style.display = "none";
 });
-
