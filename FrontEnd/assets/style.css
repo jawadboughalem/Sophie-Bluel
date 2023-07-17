@@ -462,7 +462,7 @@ footer nav ul {
 	text-align: center;
 }
 
-.upload-img {
+.upload-logo {
 	margin-bottom: 10px; 
 }
 
@@ -544,10 +544,10 @@ footer nav ul {
 	cursor: not-allowed;
   }
   
-  /*#validation-btn:enabled {
+  #validation-btn:enabled {
 	background-color: #1D6154;
 	cursor: pointer;
-  }*/
+  }
   
 /*---------------------------------*/
 #gallery-modal {
@@ -601,3 +601,13 @@ footer nav ul {
 	border-radius: 2px;
     cursor: pointer;
 }
+
+.upload-img {
+	width: 129px;
+	height: 170px;
+	object-fit: contain;
+  }
+  
+
+
+  
