@@ -16,10 +16,11 @@ function createFigure(work) {
   img.alt = work.title;
   figure.appendChild(img);
   const figcaption = document.createElement('figcaption');
-  figcaption.innerHTML = work.title;
+  figcaption.textContent = work.title;
   figure.appendChild(figcaption);
   return figure;
 }
+
 // Fonction pour charger les travaux
 function loadWorks() {
   fetchData('http://localhost:5678/api/works')
@@ -28,6 +29,7 @@ function loadWorks() {
       displayWorks();
     });
 }
+
 // Fonction pour afficher les travaux en fonction d'une catégorie donnée
 function displayWorks(category) {
   const gallery = document.querySelector('.gallery');
@@ -37,6 +39,7 @@ function displayWorks(category) {
   if (category && category !== 'TOUS') {
     filteredWorks = allWorks.filter(work => work.category.name === category);
   }
+
   // J'itère sur les travaux filtrés et je crée des éléments figure pour chaque travail
   filteredWorks.forEach(work => {
     const figure = createFigure(work);
@@ -47,8 +50,8 @@ function displayWorks(category) {
 // Fonction pour créer un bouton de catégorie
 function createCategoryButton(category) {
   const button = document.createElement('button');
-  button.innerHTML = category;
-    if (category === 'TOUS') {
+  button.textContent = category;
+  if (category === 'TOUS') {
     button.classList.add('all-category-button');
     button.classList.add('all-category-text');
   } else {
@@ -69,14 +72,18 @@ function loadCategories() {
       fillCategorySelect();
     });
 }
+
 // Fonction pour afficher les catégories
 function displayCategories() {
   const categoryContainer = document.querySelector('.category-container');
   categoryContainer.innerHTML = '';
-  categories.forEach(category => {
-    const button = createCategoryButton(category);
-    categoryContainer.appendChild(button);
-  });
+
+  if (!localStorage.getItem('authToken')) { // Si l'utilisateur n'est pas connecté
+    categories.forEach(category => {
+      const button = createCategoryButton(category);
+      categoryContainer.appendChild(button);
+    });
+  }
 }
 
 // Fonction pour remplir le select du formulaire avec les catégories
@@ -93,23 +100,24 @@ function fillCategorySelect() {
 
 loadCategories();
 loadWorks();
+displayCategories();
 
-//POUR LE LOGOUT
+// POUR LE LOGOUT
 const loginLink = document.querySelector('.login-link');
 
 if (localStorage.getItem('authToken')) {
   loginLink.textContent = 'logout';
   loginLink.href = '#';
-
+  // Appeler displayCategories pour cacher les boutons de filtre
   loginLink.addEventListener('click', function (e) {
     e.preventDefault();
-
     localStorage.removeItem('authToken');
     window.location.reload();
   });
 } else {
   loginLink.textContent = 'login';
   loginLink.href = 'login.html';
+  // Appeler displayCategories pour afficher les boutons de filtre
 }
 
 const editBar = document.querySelector('#edit-bar');
@@ -126,7 +134,9 @@ if (localStorage.getItem('authToken')) {
   editButton2.style.display = 'none';
 }
 
-// POUR LA MODAL
+
+
+//------------------- POUR LA MODAL----------------------//
 
 // Suppression travail
 function deleteWork(workId) {
@@ -233,17 +243,23 @@ document.getElementById('modal-close-btn').addEventListener('click', function() 
 
 //---------------------------------------------
 
-// Fonction pour gérer le soumission du formulaire
+
+// Récupération éléments DOM
+const titleInput = document.getElementById('upload-title');
+const categorySelect = document.getElementById('select-category');
+const validationBtn = document.getElementById('validation-btn');
+const addWorkBtn = document.getElementById('add-work-btn');
+const modalCloseBtn = document.getElementById('modal-close-btn');
+const modalCloseCross = document.querySelector('.modal-close-btn');
+const modalWrapper = document.querySelector('.modal-wrapper');
+
+// Fonction pour gérer la soumission du formulaire
 function handleFormSubmit(e) {
   e.preventDefault();
 
   // Récupérer les valeurs du formulaire
-  const titleInput = document.getElementById('upload-title');
-  const imageInput = document.getElementById('add-work-btn');
-  const categorySelect = document.getElementById('select-category');
-
   const title = titleInput.value;
-  const imageFile = imageInput.files[0];
+  const imageFile = addWorkBtn.files[0];
   const category = categorySelect.value;
 
   // Validation des données du formulaire
@@ -256,7 +272,7 @@ function handleFormSubmit(e) {
   const formData = new FormData();
   formData.append('title', title);
   formData.append('image', imageFile);
-  formData.append('category', category);
+  formData.append('category', 1);
 
   // Envoi de la demande à l'API
   fetch('http://localhost:5678/api/works', {
@@ -269,58 +285,95 @@ function handleFormSubmit(e) {
     .then(response => response.json())
     .then(data => {
       console.log('Réponse de l’API:', data);
-      loadWorks(); // Recharger les travaux après l'ajout d'un nouveau
+      loadWorks();
       document.getElementById('modal-add').style.display = "none"; // Fermer la fenêtre modale après l'envoi du formulaire
     })
-    .catch(error => console.error('Erreur:', error));
+    .catch(error => console.log(error));
 }
 
-// Fonction pour gérer le changement d'entrée de fichier
 function handleFileChange() {
-  const fileInput = document.getElementById('add-work-btn');
-  const file = fileInput.files[0];
+  const file = addWorkBtn.files[0];
+  const infoText = document.querySelector("#upload-img-preview p");
+  const svgImage = document.querySelector(".upload-img-svg"); 
+
   if (file) {
     const reader = new FileReader();
     reader.onload = function (e) {
-      // Modifier le contenu de la div pour montrer l'image
       const imgPreview = document.getElementById('upload-img-preview');
-      imgPreview.innerHTML = `<img class="upload-img" src="${e.target.result}" alt="Image ajoutée">`;
+
+      // Remplacer l'élément d'image existant ou créer un nouvel élément d'image
+      let img = imgPreview.querySelector('.upload-img');
+      if (!img) {
+        img = document.createElement('img');
+        img.className = "upload-img";
+        imgPreview.appendChild(img);
+      }
+
+      img.src = e.target.result;
+      img.alt = "Image ajoutée";
+
+      addWorkBtn.style.display = "none";
+      addWorkBtn.parentElement.style.display = "none";
+
+      if (infoText) {
+        infoText.style.display = "none";
+      }
+
+      if (svgImage) {
+        svgImage.style.display = "none";
+      }
     };
     reader.readAsDataURL(file);
   }
 }
 
-// Fonction pour réinitialiser la div de prévisualisation
 function resetUploadPreview() {
   const imgPreview = document.getElementById('upload-img-preview');
-  imgPreview.innerHTML = `
-    <img class="upload-logo" src="assets/images/Group.svg" alt="Ajouter une photo">
-    <label>+ Ajouter photo
-      <input id="add-work-btn" type="file" class="add-btn" accept=".jpg, .jpeg, .png" name="image"/>
-    </label>
-    <p>jpg, png : 4mo max</p>
-  `;
+  const infoText = document.querySelector("#upload-img-preview p");
+  const svgImage = document.querySelector(".upload-img-svg");
 
-  // Réajouter l'écouteur d'événements au bouton de téléchargement
-  const addWorkBtn = document.getElementById('add-work-btn');
-  if (addWorkBtn) {
-    addWorkBtn.addEventListener('change', handleFileChange);
+  // Retirer l'élément d'image
+  const img = imgPreview.querySelector('.upload-img');
+  if (img) {
+    imgPreview.removeChild(img);
   }
+
+  addWorkBtn.style.display = "block";
+  addWorkBtn.parentElement.style.display = "block";
+  addWorkBtn.value = '';
+
+  // Réinitialiser les styles CSS modifiés précédemment
+  imgPreview.style.cssText = "";
+  addWorkBtn.style.cssText = "";
+  addWorkBtn.parentElement.style.cssText = "";
+
+  // Info texte quand le form est rein.
+  if (infoText) {
+    infoText.style.display = "block";
+  }
+
+  // Idem pour le svg
+  if (svgImage) {
+    svgImage.style.display = "block";
+  }
+
+  // Réinitialiser le champ du titre et de la catégorie
+  titleInput.value = '';
+  categorySelect.value = ""; // Réinitialise à l'option par défaut
 }
 
 // Ajouter l'écouteur d'événements au bouton de validation du formulaire
-const validationBtn = document.getElementById('validation-btn');
 validationBtn.addEventListener('click', handleFormSubmit);
 
 // Ajouter l'écouteur d'événements au bouton de téléchargement
-const addWorkBtn = document.getElementById('add-work-btn');
 if (addWorkBtn) {
   addWorkBtn.addEventListener('change', handleFileChange);
 }
 
 // Ajouter les écouteurs d'événements pour réinitialiser la prévisualisation
-const modalCloseBtn = document.getElementById('modal-close-btn');
 modalCloseBtn.addEventListener('click', resetUploadPreview);
+modalCloseCross.addEventListener('click', resetUploadPreview);
 
-const modalCloseArrow = document.querySelector('.js-modal-close');
-modalCloseArrow.addEventListener('click', resetUploadPreview);
+modalWrapper.addEventListener('click', function(event) {
+  event.stopPropagation();
+});
