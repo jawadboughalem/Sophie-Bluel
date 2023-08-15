@@ -17,13 +17,15 @@ function sendLoginInfo(loginData) {
 
 // Fonction pour gérer la réponse de l'API
 function handleApiResponse(data, errorMsg) {
-  if (data.message) {
-      errorMsg.textContent = "Oups, votre identifiant ou votre mot de passe semble incorrecte !";
-  } else {
-      localStorage.setItem('authToken', data.token); // Je sauvegarde le token d'authentification dans le local storage
-      window.location.href = 'index.html'; // Redirige vers la page d’accueil
+  if (data.error) {
+    errorMsg.textContent = "Oups, votre identifiant ou votre mot de passe semble incorrect !";
+  } else if (data.token) {
+    localStorage.setItem('authToken', data.token); // Je sauvegarde le token d'authentification dans le local storage
+    window.location.href = 'index.html'; // Redirige vers la page d’accueil
   }
 }
+
+
 
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.querySelector('#login-form');
@@ -44,3 +46,4 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   });
 });
+
